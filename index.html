@@ -7,29 +7,50 @@
 <title>個人工作手札</title>
 <style>
 :root{
-  --bg:#f7f7f5;--surface:#fff;--border:#e4e3de;--line:#eeede9;
-  --text:#1f1e1c;--muted:#706e68;--faint:#9a978f;
-  --accent:#b0522c;--accent-soft:#fbefe9;
-  --warn:#8a6d1f;--warn-soft:#fbf4e0;
-  --meet:#4a6b7c;--meet-soft:#eef3f6;
-  --today:#fdf4ef;--danger:#a6342a;
-  --shadow:0 1px 2px rgba(0,0,0,.05),0 3px 10px rgba(0,0,0,.035);
+  color-scheme:light;
+  /* -- 底層：中性灰階（略偏冷，讓語意色更跳） -- */
+  --bg:#f4f5f7;      --surface:#ffffff;   --surface-2:#f7f8fa;
+  --border:#dce0e6;  --line:#ebedf1;
+  --text:#14181e;    --muted:#5a6472;     --faint:#66707d;
+  /* -- 主色 · 已確認行程（對應行事曆橘色 colorId 6） -- */
+  --accent:#c2410c;  --accent-hi:#9a3412; --accent-fg:#ffffff;
+  --accent-soft:#fdf0e8;                  --accent-line:#efc3a6;
+  /* -- 警示色 · 待確認時間（對應行事曆黃色 colorId 5） -- */
+  --warn:#8f5d06;    --warn-soft:#fdf5e4; --warn-line:#e0c88d;
+  /* -- 次要色 · 會議紀錄 -- */
+  --meet:#35618e;    --meet-soft:#edf3f9; --meet-line:#c2d6e9;
+  --today:#fff4ec;   --danger:#b42318;
+  --ring:0 0 0 3px rgba(194,65,12,.22);
+  --shadow:0 1px 2px rgba(16,24,40,.05),0 3px 10px rgba(16,24,40,.05);
+  --shadow-pop:0 10px 30px rgba(16,24,40,.16),0 2px 8px rgba(16,24,40,.07);
 }
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]){
-  --bg:#191816;--surface:#232220;--border:#36342f;--line:#2c2a27;
-  --text:#ecebe6;--muted:#a09d95;--faint:#75726b;
-  --accent:#e08152;--accent-soft:#33241c;
-  --warn:#d9b05e;--warn-soft:#2e2718;
-  --meet:#8fb4c8;--meet-soft:#1e262b;
-  --today:#2e2119;--danger:#e0776b;
-  --shadow:0 1px 2px rgba(0,0,0,.3),0 3px 10px rgba(0,0,0,.2);
+  color-scheme:dark;
+  --bg:#14171c;      --surface:#1c2027;   --surface-2:#222831;
+  --border:#313945;  --line:#272d36;
+  --text:#e7eaef;    --muted:#a3adbb;     --faint:#7e8897;
+  --accent:#ff8f57;  --accent-hi:#ffab7d; --accent-fg:#261205;
+  --accent-soft:#2d1c12;                  --accent-line:#5e3720;
+  --warn:#e3ba55;    --warn-soft:#2b2314; --warn-line:#59491c;
+  --meet:#82b3e0;    --meet-soft:#182430; --meet-line:#33506d;
+  --today:#2b1d13;   --danger:#f0796c;
+  --ring:0 0 0 3px rgba(255,143,87,.30);
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.28);
+  --shadow-pop:0 14px 40px rgba(0,0,0,.6),0 2px 10px rgba(0,0,0,.4);
 }}
 :root[data-theme=dark]{
-  --bg:#191816;--surface:#232220;--border:#36342f;--line:#2c2a27;
-  --text:#ecebe6;--muted:#a09d95;--faint:#75726b;
-  --accent:#e08152;--accent-soft:#33241c;--warn:#d9b05e;--warn-soft:#2e2718;
-  --meet:#8fb4c8;--meet-soft:#1e262b;--today:#2e2119;--danger:#e0776b;
-  --shadow:0 1px 2px rgba(0,0,0,.3),0 3px 10px rgba(0,0,0,.2);
+  color-scheme:dark;
+  --bg:#14171c;      --surface:#1c2027;   --surface-2:#222831;
+  --border:#313945;  --line:#272d36;
+  --text:#e7eaef;    --muted:#a3adbb;     --faint:#7e8897;
+  --accent:#ff8f57;  --accent-hi:#ffab7d; --accent-fg:#261205;
+  --accent-soft:#2d1c12;                  --accent-line:#5e3720;
+  --warn:#e3ba55;    --warn-soft:#2b2314; --warn-line:#59491c;
+  --meet:#82b3e0;    --meet-soft:#182430; --meet-line:#33506d;
+  --today:#2b1d13;   --danger:#f0796c;
+  --ring:0 0 0 3px rgba(255,143,87,.30);
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.28);
+  --shadow-pop:0 14px 40px rgba(0,0,0,.6),0 2px 10px rgba(0,0,0,.4);
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);line-height:1.7;
@@ -45,9 +66,10 @@ body{margin:0;background:var(--bg);color:var(--text);line-height:1.7;
 .gatebox input{width:100%;padding:13px 15px;font-size:16px;font-family:inherit;
   background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:10px;
   text-align:center;letter-spacing:.05em}
-.gatebox input:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:transparent}
+.gatebox input:focus{outline:none;border-color:var(--accent);box-shadow:var(--ring)}
 .gatebox button{width:100%;margin-top:11px;padding:13px;font-size:15px;font-weight:600;
-  font-family:inherit;background:var(--accent);color:#fff;border:none;border-radius:10px;
+  font-family:inherit;background:var(--accent);color:var(--accent-fg);
+  border:1px solid var(--accent);border-radius:10px;transition:background .12s,border-color .12s;
   cursor:pointer}
 .gatebox button:disabled{opacity:.55;cursor:default}
 .gatebox .msg{margin-top:14px;font-size:13px;min-height:20px}
@@ -66,22 +88,25 @@ body{margin:0;background:var(--bg);color:var(--text);line-height:1.7;
 header{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:16px}
 h1.t{font-size:23px;font-weight:700;margin:0;letter-spacing:-.01em}
 .stat{color:var(--faint);font-size:12.5px}
-.lock{margin-left:auto;font-size:12px;color:var(--faint);border:1px solid var(--border);
-  background:none;border-radius:7px;padding:3px 10px;cursor:pointer;font-family:inherit}
-.lock:hover{border-color:var(--accent);color:var(--accent)}
+.lock{align-self:center;font-size:12px;color:var(--muted);border:1px solid var(--border);
+  background:var(--surface);border-radius:8px;padding:4px 11px;cursor:pointer;font-family:inherit;
+  line-height:1.5;transition:background .12s,border-color .12s,color .12s}
+.lock:hover{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent)}
 #q{width:100%;padding:11px 14px;font-size:16px;font-family:inherit;margin-bottom:20px;
   background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:9px}
-#q:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:transparent}
+#q:focus{outline:none;border-color:var(--accent);box-shadow:var(--ring)}
 .nav{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
 .nav h2{font-size:18px;font-weight:700;margin:0;min-width:126px;font-variant-numeric:tabular-nums}
 .btn{border:1px solid var(--border);background:var(--surface);color:var(--muted);
-  border-radius:8px;padding:5px 12px;font-size:14px;cursor:pointer;font-family:inherit;line-height:1.5}
-.btn:hover{border-color:var(--accent);color:var(--accent)}
+  border-radius:8px;padding:5px 12px;font-size:14px;cursor:pointer;font-family:inherit;
+  line-height:1.5;transition:background .12s,border-color .12s,color .12s}
+.btn:hover{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent)}
+.btn:active{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
 .legend{margin-left:auto;display:flex;gap:11px;flex-wrap:wrap;font-size:11.5px;color:var(--muted)}
 .legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px}
-.lg-s{background:var(--accent)}
+.lg-s{background:var(--accent);border:1px solid var(--accent)}
 .lg-g{background:var(--warn-soft);border:1.5px dashed var(--warn)}
-.lg-m{background:var(--meet)}
+.lg-m{background:var(--meet-soft);border:1px solid var(--meet)}
 .cal{background:var(--surface);border:1px solid var(--border);border-radius:12px;
   overflow:hidden;box-shadow:var(--shadow);margin-bottom:8px}
 .cal .wd{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--border)}
@@ -98,13 +123,15 @@ h1.t{font-size:23px;font-weight:700;margin:0;letter-spacing:-.01em}
 .cell.sel{box-shadow:inset 0 0 0 2px var(--accent)}
 .dnum{font-size:12px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums;
   display:inline-block;min-width:19px;text-align:center;line-height:19px;border-radius:50%}
-.cell.today .dnum{background:var(--accent);color:#fff;font-weight:700}
+.cell.today .dnum{background:var(--accent);color:var(--accent-fg);font-weight:700}
 .cell.out .dnum{color:var(--faint);font-weight:400}
 .ev{font-size:11px;line-height:1.4;margin-top:2px;padding:1px 4px;border-radius:4px;
+  border:1px solid transparent;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
-.ev.solid{background:var(--accent);color:#fff;font-weight:600}
-.ev.guess{background:var(--warn-soft);color:var(--warn);border:1px dashed var(--warn)}
-.ev.meeting{background:var(--meet-soft);color:var(--meet);font-weight:600}
+.ev.solid{background:var(--accent);border-color:var(--accent);color:var(--accent-fg);font-weight:600}
+.ev.guess{background:var(--warn-soft);border-color:var(--warn);border-style:dashed;
+  color:var(--warn);font-weight:600}
+.ev.meeting{background:var(--meet-soft);border-color:var(--meet-line);color:var(--meet);font-weight:600}
 .more{font-size:10.5px;color:var(--faint);margin-top:2px;padding-left:4px}
 .detail{background:var(--surface);border:1px solid var(--border);border-radius:12px;
   padding:15px 17px;margin-bottom:28px;box-shadow:var(--shadow)}
@@ -112,10 +139,11 @@ h1.t{font-size:23px;font-weight:700;margin:0;letter-spacing:-.01em}
 .detail .none{color:var(--faint);font-size:13px}
 .row{padding:9px 0;border-top:1px solid var(--line)}
 .row:first-of-type{border-top:none}
-.row .t{font-size:11.5px;font-weight:700;padding:1px 8px;border-radius:20px;margin-right:7px}
-.t.solid{background:var(--accent);color:#fff}
-.t.guess{background:var(--warn-soft);color:var(--warn);border:1px solid var(--warn)}
-.t.meeting{background:var(--meet-soft);color:var(--meet)}
+.row .t{font-size:11.5px;font-weight:700;padding:1px 9px;border-radius:20px;margin-right:7px;
+  border:1px solid transparent;white-space:nowrap}
+.t.solid{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.t.guess{background:var(--warn-soft);border-color:var(--warn);border-style:dashed;color:var(--warn)}
+.t.meeting{background:var(--meet-soft);border-color:var(--meet-line);color:var(--meet)}
 .row .n{font-weight:600;font-size:14.5px;cursor:pointer}
 .row .n:hover,.ev:hover{text-decoration:underline;text-underline-offset:2px}
 .row .sub{color:var(--muted);font-size:12.5px;margin-top:2px}
@@ -126,13 +154,16 @@ h2.sec{font-size:11px;font-weight:700;letter-spacing:.11em;color:var(--faint);
   text-transform:uppercase;margin:0}
 .yrs{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
 .yr{font-size:12.5px;padding:3px 11px;border-radius:20px;cursor:pointer;user-select:none;
-  border:1px solid var(--border);background:var(--surface);color:var(--muted)}
-.yr.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+  border:1px solid var(--border);background:var(--surface);color:var(--muted);
+  transition:background .12s,border-color .12s,color .12s}
+.yr:hover{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent)}
+.yr.on{background:var(--accent);border-color:var(--accent);color:var(--accent-fg);font-weight:600}
+.yr.on:hover{background:var(--accent-hi);border-color:var(--accent-hi);color:var(--accent-fg)}
 .sechint{font-size:12px;color:var(--faint);margin-bottom:14px}
 .mo{font-size:14.5px;font-weight:700;margin:22px 0 9px;padding-bottom:5px;
   border-bottom:2px solid var(--border);display:flex;align-items:baseline;gap:8px}
-.mo .c{font-size:11px;font-weight:600;color:var(--faint);background:var(--border);
-  border-radius:10px;padding:0 7px}
+.mo .c{font-size:11px;font-weight:600;color:var(--muted);background:var(--surface-2);
+  border:1px solid var(--border);border-radius:10px;padding:0 7px}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:11px;
   padding:14px 16px;margin-bottom:9px;box-shadow:var(--shadow)}
 .mhead{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:5px}
@@ -155,7 +186,7 @@ footer{margin-top:38px;padding-top:15px;border-top:1px solid var(--border);
 .pop{position:fixed;z-index:50;width:370px;max-width:calc(100vw - 20px);display:none;
   max-height:calc(100dvh - 20px);overflow-y:auto;
   background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:15px 17px;
-  box-shadow:0 10px 30px rgba(0,0,0,.2),0 2px 8px rgba(0,0,0,.08)}
+  box-shadow:var(--shadow-pop)}
 .pop.on{display:block}
 .pop .x{position:absolute;top:8px;right:10px;cursor:pointer;color:var(--faint);font-size:16px;
   line-height:1;border:none;background:none;padding:4px 8px;border-radius:5px;font-family:inherit}
@@ -171,18 +202,37 @@ footer{margin-top:38px;padding-top:15px;border-top:1px solid var(--border);
 .pop ul{margin:0;padding-left:17px;max-height:170px;overflow-y:auto}
 .pop li{font-size:12.5px;color:var(--muted);margin:2px 0;line-height:1.55}
 .pop .acts{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap}
-.pop .a{font-size:12.5px;border:1px solid var(--border);background:none;color:var(--muted);
-  border-radius:7px;padding:5px 11px;cursor:pointer;font-family:inherit;line-height:1.5}
+.pop .a{font-size:12.5px;border:1px solid var(--border);background:var(--surface);color:var(--muted);
+  border-radius:7px;padding:5px 11px;cursor:pointer;font-family:inherit;line-height:1.5;
+  transition:background .12s,border-color .12s,color .12s}
+.pop .a:hover{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent)}
+.pop .x:hover{background:var(--surface-2);color:var(--text)}
 .pop details{margin-top:12px;padding-top:11px;border-top:1px solid var(--line)}
 .pop summary{font-size:12.5px;color:var(--muted);cursor:pointer;list-style:none;user-select:none}
 .pop summary::-webkit-details-marker{display:none}
 .pop summary::before{content:'▸';display:inline-block;font-size:10px;margin-right:5px}
 .pop details[open] summary::before{content:'▾'}
-.pop pre{margin:9px 0 0;padding:11px 12px;background:var(--bg);border-radius:8px;
+.pop pre{margin:9px 0 0;padding:11px 12px;background:var(--surface-2);border-radius:8px;
   border:1px solid var(--line);font-family:inherit;font-size:11.5px;line-height:1.65;
   color:var(--muted);white-space:pre-wrap;word-break:break-word;max-height:220px;overflow-y:auto}
 @keyframes flash{0%,100%{box-shadow:var(--shadow)}25%,60%{box-shadow:0 0 0 3px var(--accent)}}
 .card.hl{animation:flash 1.8s ease}
+
+.notrans,.notrans *{transition:none!important}
+/* 配色切換鈕 */
+.tgl{margin-left:auto;align-self:center;flex:none;width:32px;height:32px;padding:0;
+  display:inline-flex;align-items:center;justify-content:center;font-size:14px;line-height:1;
+  cursor:pointer;font-family:inherit;border-radius:8px;
+  border:1px solid var(--border);background:var(--surface);color:var(--muted);
+  transition:background .12s,border-color .12s,color .12s}
+.tgl:hover{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent)}
+.tgl:active{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
+.btn:focus-visible,.yr:focus-visible,.tgl:focus-visible,.lock:focus-visible,
+.pop .a:focus-visible,.pop .x:focus-visible,
+.gatebox button:focus-visible{outline:none;border-color:var(--accent);box-shadow:var(--ring)}
+.gatebox button:hover:not(:disabled){background:var(--accent-hi);border-color:var(--accent-hi)}
+.gate .tgl{position:fixed;top:14px;right:14px;margin-left:0}
+
 @media(max-width:700px){
   .wrap{padding:20px 12px 70px}
   .cell{min-height:62px;padding:3px 2px}
@@ -192,10 +242,16 @@ footer{margin-top:38px;padding-top:15px;border-top:1px solid var(--border);
   .nav h2{min-width:104px;font-size:16px}
 }
 </style>
+<script>
+/* 進畫面前先套用上次選的配色，避免閃爍 */
+(function(){try{var t=localStorage.getItem('wj-theme');
+if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+</script>
 </head>
 <body>
 
 <div class="gate" id="gate">
+  <button class="tgl" type="button" aria-label="切換深淺配色"></button>
   <div class="gatebox">
     <h1>個人工作手札</h1>
     <p>這份資料經過加密，需要密碼才能檢視</p>
@@ -211,6 +267,7 @@ footer{margin-top:38px;padding-top:15px;border-top:1px solid var(--border);
   <header>
     <h1 class="t">個人工作手札</h1>
     <span class="stat" id="stat"></span>
+    <button class="tgl" type="button" aria-label="切換深淺配色"></button>
     <button class="lock" id="relock">鎖定</button>
   </header>
   <input id="q" type="search" placeholder="搜尋會議、單位、廠商、關鍵字…" autocomplete="off">
@@ -540,6 +597,33 @@ function bind() {
     KW = e.target.value.trim().toLowerCase(); renderAll();
   });
 }
+</script>
+<script>
+/* 深／淺配色切換：未選過時跟隨系統，選過後記在 localStorage */
+(function(){
+  var root=document.documentElement, btns=document.querySelectorAll('.tgl');
+  if(!btns.length) return;
+  var mq=window.matchMedia('(prefers-color-scheme:dark)');
+  function cur(){return root.getAttribute('data-theme')||(mq.matches?'dark':'light');}
+  function paint(){
+    var d=cur()==='dark';
+    for(var i=0;i<btns.length;i++){
+      btns[i].textContent=d?'\u2600':'\u263e';
+      btns[i].title=d?'切換為淺色配色':'切換為深色配色';
+    }
+  }
+  for(var i=0;i<btns.length;i++) btns[i].addEventListener('click',function(){
+    var n=cur()==='dark'?'light':'dark';
+    root.classList.add('notrans');            /* 切換瞬間不要有色彩補間 */
+    root.setAttribute('data-theme',n);
+    try{localStorage.setItem('wj-theme',n);}catch(e){}
+    paint();
+    requestAnimationFrame(function(){requestAnimationFrame(function(){
+      root.classList.remove('notrans');});});
+  });
+  if(mq.addEventListener) mq.addEventListener('change',function(){if(!root.getAttribute('data-theme'))paint();});
+  paint();
+})();
 </script>
 </body>
 </html>
