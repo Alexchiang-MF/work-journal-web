@@ -1,0 +1,545 @@
+<!doctype html>
+<html lang="zh-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>個人工作手札</title>
+<style>
+:root{
+  --bg:#f7f7f5;--surface:#fff;--border:#e4e3de;--line:#eeede9;
+  --text:#1f1e1c;--muted:#706e68;--faint:#9a978f;
+  --accent:#b0522c;--accent-soft:#fbefe9;
+  --warn:#8a6d1f;--warn-soft:#fbf4e0;
+  --meet:#4a6b7c;--meet-soft:#eef3f6;
+  --today:#fdf4ef;--danger:#a6342a;
+  --shadow:0 1px 2px rgba(0,0,0,.05),0 3px 10px rgba(0,0,0,.035);
+}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){
+  --bg:#191816;--surface:#232220;--border:#36342f;--line:#2c2a27;
+  --text:#ecebe6;--muted:#a09d95;--faint:#75726b;
+  --accent:#e08152;--accent-soft:#33241c;
+  --warn:#d9b05e;--warn-soft:#2e2718;
+  --meet:#8fb4c8;--meet-soft:#1e262b;
+  --today:#2e2119;--danger:#e0776b;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 3px 10px rgba(0,0,0,.2);
+}}
+:root[data-theme=dark]{
+  --bg:#191816;--surface:#232220;--border:#36342f;--line:#2c2a27;
+  --text:#ecebe6;--muted:#a09d95;--faint:#75726b;
+  --accent:#e08152;--accent-soft:#33241c;--warn:#d9b05e;--warn-soft:#2e2718;
+  --meet:#8fb4c8;--meet-soft:#1e262b;--today:#2e2119;--danger:#e0776b;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 3px 10px rgba(0,0,0,.2);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);line-height:1.7;
+  font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  -webkit-font-smoothing:antialiased}
+
+/* ── 密碼閘門 ── */
+.gate{min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:24px}
+.gatebox{width:100%;max-width:380px;background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;padding:30px 26px;box-shadow:var(--shadow);text-align:center}
+.gatebox h1{font-size:21px;margin:0 0 6px;letter-spacing:-.01em}
+.gatebox p{font-size:13.5px;color:var(--faint);margin:0 0 20px}
+.gatebox input{width:100%;padding:13px 15px;font-size:16px;font-family:inherit;
+  background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:10px;
+  text-align:center;letter-spacing:.05em}
+.gatebox input:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:transparent}
+.gatebox button{width:100%;margin-top:11px;padding:13px;font-size:15px;font-weight:600;
+  font-family:inherit;background:var(--accent);color:#fff;border:none;border-radius:10px;
+  cursor:pointer}
+.gatebox button:disabled{opacity:.55;cursor:default}
+.gatebox .msg{margin-top:14px;font-size:13px;min-height:20px}
+.gatebox .msg.err{color:var(--danger)}
+.gatebox .msg.work{color:var(--muted)}
+.gatebox .keep{margin-top:14px;font-size:12.5px;color:var(--faint);
+  display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;user-select:none}
+.gatebox .keep input{width:auto;margin:0}
+.spin{display:inline-block;width:12px;height:12px;border:2px solid var(--border);
+  border-top-color:var(--accent);border-radius:50%;animation:sp .7s linear infinite;
+  vertical-align:-2px;margin-right:6px}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+/* ── 主畫面 ── */
+.wrap{max-width:1000px;margin:0 auto;padding:28px 18px 80px}
+header{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+h1.t{font-size:23px;font-weight:700;margin:0;letter-spacing:-.01em}
+.stat{color:var(--faint);font-size:12.5px}
+.lock{margin-left:auto;font-size:12px;color:var(--faint);border:1px solid var(--border);
+  background:none;border-radius:7px;padding:3px 10px;cursor:pointer;font-family:inherit}
+.lock:hover{border-color:var(--accent);color:var(--accent)}
+#q{width:100%;padding:11px 14px;font-size:16px;font-family:inherit;margin-bottom:20px;
+  background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:9px}
+#q:focus{outline:2px solid var(--accent);outline-offset:-1px;border-color:transparent}
+.nav{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.nav h2{font-size:18px;font-weight:700;margin:0;min-width:126px;font-variant-numeric:tabular-nums}
+.btn{border:1px solid var(--border);background:var(--surface);color:var(--muted);
+  border-radius:8px;padding:5px 12px;font-size:14px;cursor:pointer;font-family:inherit;line-height:1.5}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.legend{margin-left:auto;display:flex;gap:11px;flex-wrap:wrap;font-size:11.5px;color:var(--muted)}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px}
+.lg-s{background:var(--accent)}
+.lg-g{background:var(--warn-soft);border:1.5px dashed var(--warn)}
+.lg-m{background:var(--meet)}
+.cal{background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  overflow:hidden;box-shadow:var(--shadow);margin-bottom:8px}
+.cal .wd{display:grid;grid-template-columns:repeat(7,1fr);border-bottom:1px solid var(--border)}
+.cal .wd div{padding:7px 0;text-align:center;font-size:11.5px;font-weight:700;color:var(--faint)}
+.cal .wd div.we{color:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(7,1fr)}
+.cell{min-height:90px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);
+  padding:4px 5px 5px;cursor:pointer}
+.cell:nth-child(7n){border-right:none}
+.grid>.cell:nth-last-child(-n+7){border-bottom:none}
+.cell:hover{background:var(--accent-soft)}
+.cell.out{background:var(--bg);opacity:.45}
+.cell.today{background:var(--today)}
+.cell.sel{box-shadow:inset 0 0 0 2px var(--accent)}
+.dnum{font-size:12px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums;
+  display:inline-block;min-width:19px;text-align:center;line-height:19px;border-radius:50%}
+.cell.today .dnum{background:var(--accent);color:#fff;font-weight:700}
+.cell.out .dnum{color:var(--faint);font-weight:400}
+.ev{font-size:11px;line-height:1.4;margin-top:2px;padding:1px 4px;border-radius:4px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer}
+.ev.solid{background:var(--accent);color:#fff;font-weight:600}
+.ev.guess{background:var(--warn-soft);color:var(--warn);border:1px dashed var(--warn)}
+.ev.meeting{background:var(--meet-soft);color:var(--meet);font-weight:600}
+.more{font-size:10.5px;color:var(--faint);margin-top:2px;padding-left:4px}
+.detail{background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:15px 17px;margin-bottom:28px;box-shadow:var(--shadow)}
+.detail h3{margin:0 0 9px;font-size:14.5px;font-weight:700}
+.detail .none{color:var(--faint);font-size:13px}
+.row{padding:9px 0;border-top:1px solid var(--line)}
+.row:first-of-type{border-top:none}
+.row .t{font-size:11.5px;font-weight:700;padding:1px 8px;border-radius:20px;margin-right:7px}
+.t.solid{background:var(--accent);color:#fff}
+.t.guess{background:var(--warn-soft);color:var(--warn);border:1px solid var(--warn)}
+.t.meeting{background:var(--meet-soft);color:var(--meet)}
+.row .n{font-weight:600;font-size:14.5px;cursor:pointer}
+.row .n:hover,.ev:hover{text-decoration:underline;text-underline-offset:2px}
+.row .sub{color:var(--muted);font-size:12.5px;margin-top:2px}
+.row .raw{color:var(--faint);font-size:11.5px;margin-top:4px;font-style:italic;
+  padding-left:9px;border-left:2px solid var(--border)}
+.sechead{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:5px}
+h2.sec{font-size:11px;font-weight:700;letter-spacing:.11em;color:var(--faint);
+  text-transform:uppercase;margin:0}
+.yrs{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+.yr{font-size:12.5px;padding:3px 11px;border-radius:20px;cursor:pointer;user-select:none;
+  border:1px solid var(--border);background:var(--surface);color:var(--muted)}
+.yr.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+.sechint{font-size:12px;color:var(--faint);margin-bottom:14px}
+.mo{font-size:14.5px;font-weight:700;margin:22px 0 9px;padding-bottom:5px;
+  border-bottom:2px solid var(--border);display:flex;align-items:baseline;gap:8px}
+.mo .c{font-size:11px;font-weight:600;color:var(--faint);background:var(--border);
+  border-radius:10px;padding:0 7px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:11px;
+  padding:14px 16px;margin-bottom:9px;box-shadow:var(--shadow)}
+.mhead{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:5px}
+.date{font-variant-numeric:tabular-nums;font-weight:700;font-size:13px;color:var(--accent);
+  white-space:nowrap}
+.mname{font-size:16px;font-weight:600}
+.wdl{color:var(--faint);font-size:12px}
+ul{margin:5px 0 0;padding-left:18px}
+li{margin:2px 0;font-size:14px}
+.todo{margin-top:10px;padding-top:8px;border-top:1px dashed var(--border);font-size:13px}
+.todo b{color:var(--accent)}
+.todo.g b{color:var(--warn)}
+.todo.u b{color:var(--faint)}
+.none{text-align:center;color:var(--faint);padding:30px;border:1px dashed var(--border);
+  border-radius:11px}
+.older{font-size:12px;color:var(--faint);text-align:center;padding:12px;margin-top:9px;
+  border-top:1px dashed var(--border)}
+footer{margin-top:38px;padding-top:15px;border-top:1px solid var(--border);
+  color:var(--faint);font-size:12px}
+.pop{position:fixed;z-index:50;width:370px;max-width:calc(100vw - 20px);display:none;
+  max-height:calc(100dvh - 20px);overflow-y:auto;
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:15px 17px;
+  box-shadow:0 10px 30px rgba(0,0,0,.2),0 2px 8px rgba(0,0,0,.08)}
+.pop.on{display:block}
+.pop .x{position:absolute;top:8px;right:10px;cursor:pointer;color:var(--faint);font-size:16px;
+  line-height:1;border:none;background:none;padding:4px 8px;border-radius:5px;font-family:inherit}
+.pop .hd{font-size:15.5px;font-weight:700;margin:0 24px 4px 0;line-height:1.45}
+.pop .dt{font-size:13px;font-weight:600;color:var(--accent);margin-bottom:8px}
+.pop .dt.g{color:var(--warn)}
+.pop .raw{font-size:12px;color:var(--faint);font-style:italic;
+  padding-left:9px;border-left:2px solid var(--border);margin-top:7px}
+.pop .src{margin-top:12px;padding-top:11px;border-top:1px solid var(--line)}
+.pop .srcl{font-size:10.5px;font-weight:700;letter-spacing:.1em;color:var(--faint);
+  text-transform:uppercase}
+.pop .srcm{font-size:14.5px;font-weight:600;margin:3px 0 5px}
+.pop ul{margin:0;padding-left:17px;max-height:170px;overflow-y:auto}
+.pop li{font-size:12.5px;color:var(--muted);margin:2px 0;line-height:1.55}
+.pop .acts{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap}
+.pop .a{font-size:12.5px;border:1px solid var(--border);background:none;color:var(--muted);
+  border-radius:7px;padding:5px 11px;cursor:pointer;font-family:inherit;line-height:1.5}
+.pop details{margin-top:12px;padding-top:11px;border-top:1px solid var(--line)}
+.pop summary{font-size:12.5px;color:var(--muted);cursor:pointer;list-style:none;user-select:none}
+.pop summary::-webkit-details-marker{display:none}
+.pop summary::before{content:'▸';display:inline-block;font-size:10px;margin-right:5px}
+.pop details[open] summary::before{content:'▾'}
+.pop pre{margin:9px 0 0;padding:11px 12px;background:var(--bg);border-radius:8px;
+  border:1px solid var(--line);font-family:inherit;font-size:11.5px;line-height:1.65;
+  color:var(--muted);white-space:pre-wrap;word-break:break-word;max-height:220px;overflow-y:auto}
+@keyframes flash{0%,100%{box-shadow:var(--shadow)}25%,60%{box-shadow:0 0 0 3px var(--accent)}}
+.card.hl{animation:flash 1.8s ease}
+@media(max-width:700px){
+  .wrap{padding:20px 12px 70px}
+  .cell{min-height:62px;padding:3px 2px}
+  .ev{font-size:9.5px;padding:1px 3px}
+  .legend{margin-left:0;width:100%;margin-top:4px}
+  .yrs{margin-left:0;width:100%;margin-top:4px}
+  .nav h2{min-width:104px;font-size:16px}
+}
+</style>
+</head>
+<body>
+
+<div class="gate" id="gate">
+  <div class="gatebox">
+    <h1>個人工作手札</h1>
+    <p>這份資料經過加密，需要密碼才能檢視</p>
+    <input id="pw" type="password" inputmode="text" autocomplete="current-password"
+           placeholder="輸入密碼" enterkeyhint="go">
+    <button id="go">解鎖</button>
+    <label class="keep"><input type="checkbox" id="keep" checked>這次瀏覽記住密碼</label>
+    <div class="msg" id="msg"></div>
+  </div>
+</div>
+
+<div class="wrap" id="app" style="display:none">
+  <header>
+    <h1 class="t">個人工作手札</h1>
+    <span class="stat" id="stat"></span>
+    <button class="lock" id="relock">鎖定</button>
+  </header>
+  <input id="q" type="search" placeholder="搜尋會議、單位、廠商、關鍵字…" autocomplete="off">
+  <div class="nav">
+    <button class="btn" id="prev">←</button>
+    <h2 id="mtitle"></h2>
+    <button class="btn" id="next">→</button>
+    <button class="btn" id="today">今天</button>
+    <div class="legend">
+      <span><i class="lg-s"></i>已確認</span>
+      <span><i class="lg-g"></i>待確認</span>
+      <span><i class="lg-m"></i>會議紀錄</span>
+    </div>
+  </div>
+  <div class="cal">
+    <div class="wd"><div class="we">日</div><div>一</div><div>二</div><div>三</div>
+      <div>四</div><div>五</div><div class="we">六</div></div>
+    <div class="grid" id="grid"></div>
+  </div>
+  <div class="detail" id="detail"></div>
+  <div class="sechead">
+    <h2 class="sec">會議與討論摘要</h2>
+    <div class="yrs" id="yrs"></div>
+  </div>
+  <div class="sechint" id="sechint"></div>
+  <div id="sum"></div>
+  <footer id="foot"></footer>
+</div>
+<div class="pop" id="pop"></div>
+
+<script src="data/vault.js"></script>
+<script>
+/* ============================================================
+   資料以 AES-256-GCM 加密，金鑰由 PBKDF2-SHA256 從密碼派生。
+   位元組排列：salt(16) ‖ iv(12) ‖ ciphertext ‖ authTag(16)
+   解密後為 gzip 壓縮的 JSON。
+   密碼只存在於記憶體與 sessionStorage，永不寫入任何檔案或網路請求。
+   ============================================================ */
+const V = window.VAULT;
+const gate = document.getElementById('gate');
+const msg = document.getElementById('msg');
+const pwIn = document.getElementById('pw');
+const goBtn = document.getElementById('go');
+const KEEPKEY = 'wj.pw';
+
+async function decrypt(pass) {
+  const raw = Uint8Array.from(atob(V.d), c => c.charCodeAt(0));
+  const salt = raw.slice(0, 16), iv = raw.slice(16, 28), body = raw.slice(28);
+  const enc = new TextEncoder();
+  const km = await crypto.subtle.importKey('raw', enc.encode(pass), 'PBKDF2', false, ['deriveKey']);
+  const key = await crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt, iterations: V.iter, hash: 'SHA-256' },
+    km, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+  const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, body);
+  if (!V.gz) return JSON.parse(new TextDecoder().decode(plain));
+  const stream = new Blob([plain]).stream().pipeThrough(new DecompressionStream('gzip'));
+  return JSON.parse(await new Response(stream).text());
+}
+
+async function unlock(pass, remember) {
+  if (!pass) { msg.className = 'msg err'; msg.textContent = '請輸入密碼'; return; }
+  goBtn.disabled = true; pwIn.disabled = true;
+  msg.className = 'msg work';
+  msg.innerHTML = '<span class="spin"></span>解密中，請稍候…';
+  await new Promise(r => setTimeout(r, 30));   // 讓畫面先更新
+  try {
+    const payload = await decrypt(pass);
+    if (remember) { try { sessionStorage.setItem(KEEPKEY, pass); } catch (e) {} }
+    gate.style.display = 'none';
+    document.getElementById('app').style.display = '';
+    boot(payload);
+  } catch (e) {
+    try { sessionStorage.removeItem(KEEPKEY); } catch (e2) {}
+    msg.className = 'msg err';
+    msg.textContent = (typeof DecompressionStream === 'undefined')
+      ? '這個瀏覽器版本太舊，不支援解壓縮，請更新瀏覽器'
+      : '密碼不正確';
+    goBtn.disabled = false; pwIn.disabled = false;
+    pwIn.value = ''; pwIn.focus();
+  }
+}
+
+goBtn.addEventListener('click', () => unlock(pwIn.value, document.getElementById('keep').checked));
+pwIn.addEventListener('keydown', e => {
+  if (e.key === 'Enter') unlock(pwIn.value, document.getElementById('keep').checked);
+});
+document.getElementById('relock').addEventListener('click', () => {
+  try { sessionStorage.removeItem(KEEPKEY); } catch (e) {}
+  location.reload();
+});
+(function () {
+  let saved = null;
+  try { saved = sessionStorage.getItem(KEEPKEY); } catch (e) {}
+  if (saved) unlock(saved, true); else pwIn.focus();
+})();
+
+/* ── 以下為解密成功後的主畫面邏輯 ── */
+let IDX, EV = [], IX = {}, curY, curM, SEL = null, KW = '', YEAR = 'all', ANCHOR = null;
+const POP = document.getElementById('pop');
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const WD = '日一二三四五六';
+const pad = n => String(n).padStart(2, '0');
+const key = d => d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+const d0 = iso => new Date(iso + 'T00:00:00');
+const TODAY = new Date(); TODAY.setHours(0, 0, 0, 0);
+const TKEY = key(TODAY), CURY = TODAY.getFullYear();
+const fmt = (iso, t) => {
+  const d = d0(iso); if (isNaN(d)) return esc(iso);
+  const y = d.getFullYear() !== CURY ? d.getFullYear() + '/' : '';
+  return y + (d.getMonth() + 1) + '/' + d.getDate() + '（' + WD[d.getDay()] + '）' + (t ? ' ' + t : '');
+};
+
+function boot(payload) {
+  IDX = payload.index;
+  Object.keys(payload.journal).forEach(y => { EV = EV.concat(payload.journal[y]); });
+  curY = TODAY.getFullYear(); curM = TODAY.getMonth();
+  const ys = IDX.years.map(y => y.year);
+  YEAR = ys.includes(CURY) ? CURY : (ys.length ? ys[ys.length - 1] : 'all');
+  buildYearChips(); bind(); renderAll();
+}
+
+function buildYearChips() {
+  const ys = IDX.years.map(y => y.year).sort((a, b) => b - a);
+  const total = IDX.years.reduce((s, y) => s + y.count, 0);
+  document.getElementById('yrs').innerHTML =
+    ys.map(y => '<span class="yr' + (YEAR === y ? ' on' : '') + '" data-y="' + y + '">' + y + '</span>').join('')
+    + '<span class="yr' + (YEAR === 'all' ? ' on' : '') + '" data-y="all">全部 ' + total + ' 場</span>';
+}
+
+function buildIndex() {
+  const ix = {}, push = (k, o) => { (ix[k] = ix[k] || []).push(o); };
+  EV.forEach(m => {
+    if (!KW || JSON.stringify(m).toLowerCase().includes(KW)) push(m.date, { type: 'meeting', name: m.meeting, m });
+    (m.action_items || []).forEach(a => {
+      if (!a.when) return;
+      if (KW && !(JSON.stringify(a) + JSON.stringify(m)).toLowerCase().includes(KW)) return;
+      push(a.when, { type: a.confidence, name: a.what, a, m });
+    });
+  });
+  const order = { solid: 0, guess: 1, meeting: 2 };
+  Object.keys(ix).forEach(k => ix[k].sort((a, b) => order[a.type] - order[b.type]));
+  return ix;
+}
+
+function renderCal() {
+  const first = new Date(curY, curM, 1);
+  const st = new Date(first); st.setDate(1 - first.getDay());
+  const weeks = Math.ceil((first.getDay() + new Date(curY, curM + 1, 0).getDate()) / 7);
+  let h = '';
+  for (let i = 0; i < weeks * 7; i++) {
+    const d = new Date(st); d.setDate(st.getDate() + i);
+    const k = key(d), evs = IX[k] || [], cls = ['cell'];
+    if (d.getMonth() !== curM) cls.push('out');
+    if (k === TKEY) cls.push('today');
+    if (k === SEL) cls.push('sel');
+    h += '<div class="' + cls.join(' ') + '" data-k="' + k + '">'
+      + '<span class="dnum">' + d.getDate() + '</span>'
+      + evs.slice(0, 3).map((e, j) => '<div class="ev ' + e.type + '" data-ref="' + k + '#' + j + '">'
+        + (e.a && e.a.time ? esc(e.a.time) + ' ' : '') + esc(e.name) + '</div>').join('')
+      + (evs.length > 3 ? '<div class="more">+' + (evs.length - 3) + ' 項</div>' : '')
+      + '</div>';
+  }
+  document.getElementById('grid').innerHTML = h;
+  document.getElementById('mtitle').textContent = curY + ' 年 ' + (curM + 1) + ' 月';
+}
+
+function renderDetail() {
+  const el = document.getElementById('detail');
+  if (!SEL) {
+    const n = Object.keys(IX).filter(k => k >= TKEY).length;
+    el.innerHTML = '<h3>點選日期查看當天內容</h3><div class="none">'
+      + (n ? '今天之後還有 ' + n + ' 天排有事項' : '今天之後尚無排定事項') + '</div>';
+    return;
+  }
+  const d = d0(SEL), evs = IX[SEL] || [], label = { solid: '已確認', guess: '待確認', meeting: '會議' };
+  let h = '<h3>' + SEL + '　週' + WD[d.getDay()] + (SEL === TKEY ? '　·　今天' : '') + '</h3>';
+  if (!evs.length) h += '<div class="none">這天沒有紀錄</div>';
+  evs.forEach((e, i) => {
+    const ref = ' data-ref="' + SEL + '#' + i + '"';
+    h += '<div class="row"><span class="t ' + e.type + '">' + label[e.type] + '</span>';
+    if (e.type === 'meeting') {
+      h += '<span class="n"' + ref + '>' + esc(e.name) + '</span><div class="sub">'
+        + e.m.summary.length + ' 項重點　·　' + (e.m.action_items || []).length + ' 項待辦</div>';
+    } else {
+      const sub = [e.a.time, e.a.at_meeting, e.a.where, e.a.who && ('由 ' + e.a.who + ' 報告'),
+        '出自 ' + e.m.date + ' ' + e.m.meeting].filter(Boolean).map(esc).join('　·　');
+      h += '<span class="n"' + ref + '>' + esc(e.name) + '</span><div class="sub">' + sub + '</div>'
+        + (e.a.raw ? '<div class="raw">筆記原文：' + esc(e.a.raw) + '</div>' : '');
+    }
+    h += '</div>';
+  });
+  el.innerHTML = h;
+}
+
+const CAP = 200;
+function renderSum() {
+  const all = EV.filter(m => !KW || JSON.stringify(m).toLowerCase().includes(KW))
+    .filter(m => YEAR === 'all' || m.date.slice(0, 4) === String(YEAR))
+    .slice().sort((a, b) => b.date.localeCompare(a.date));
+  const shown = all.slice(0, CAP), over = all.length - shown.length, groups = {};
+  shown.forEach(m => { (groups[m.date.slice(0, 7)] = groups[m.date.slice(0, 7)] || []).push(m); });
+  let h = '';
+  if (!all.length) h = '<div class="none">' + (KW ? '沒有符合的紀錄' : '這一年沒有會議紀錄') + '</div>';
+  Object.keys(groups).sort().reverse().forEach(k => {
+    const [y, mo] = k.split('-');
+    h += '<div class="mo">' + y + ' 年 ' + (+mo) + ' 月<span class="c">' + groups[k].length + ' 場</span></div>';
+    groups[k].forEach(m => {
+      h += '<div class="card" id="mtg-' + EV.indexOf(m) + '"><div class="mhead">'
+        + '<span class="date">' + esc(m.date) + '</span>'
+        + '<span class="mname">' + esc(m.meeting) + '</span>'
+        + '<span class="wdl">週' + WD[d0(m.date).getDay()]
+        + (m.host_unit ? '　主辦：' + esc(m.host_unit) : '') + '</span></div>'
+        + '<ul>' + m.summary.map(s => '<li>' + esc(s) + '</li>').join('') + '</ul>'
+        + (m.action_items || []).map(a => {
+          const c = a.confidence, lb = c === 'solid' ? '下次' : c === 'guess' ? '待確認' : '未定';
+          const body = [a.when && fmt(a.when, a.time), a.at_meeting, a.where, a.who, a.what]
+            .filter(Boolean).map(esc).join('　·　');
+          return '<div class="todo ' + (c === 'guess' ? 'g' : c === 'undated' ? 'u' : '') + '"><b>'
+            + lb + '：</b>' + body + '</div>';
+        }).join('') + '</div>';
+    });
+  });
+  if (over > 0) h += '<div class="older">還有 ' + over + ' 場未顯示（單次最多 ' + CAP
+    + ' 場）—— 用年份或搜尋縮小範圍</div>';
+  document.getElementById('sum').innerHTML = h;
+  document.getElementById('sechint').textContent =
+    (YEAR === 'all' ? '全部年份' : YEAR + ' 年') + '，依月份分組　·　顯示 ' + shown.length + ' 場'
+    + (KW ? '（符合搜尋 ' + all.length + ' 場）' : '');
+}
+
+function renderAll() {
+  IX = buildIndex(); renderCal(); renderDetail(); renderSum();
+  const items = []; EV.forEach(m => (m.action_items || []).forEach(a => items.push(a)));
+  document.getElementById('stat').textContent =
+    EV.length + ' 場　·　' + items.filter(a => a.confidence === 'solid').length + ' 已確認　·　'
+    + items.filter(a => a.confidence === 'guess').length + ' 待確認';
+  document.getElementById('foot').textContent =
+    '資料更新於 ' + (IDX.updated_at || '—') + '　·　紀錄永久保留　·　此頁資料經加密存放';
+}
+
+function closePop() { POP.classList.remove('on'); ANCHOR = null; }
+function placePop() {
+  if (!ANCHOR) return;
+  const r = ANCHOR.getBoundingClientRect(), pr = POP.getBoundingClientRect();
+  const pw = pr.width, ph = pr.height, gap = 8, p = 10;
+  let left = r.left, top = r.bottom + gap;
+  if (left + pw > innerWidth - p) left = r.right - pw;
+  if (top + ph > innerHeight - p) top = r.top - ph - gap;
+  left = Math.min(Math.max(p, left), Math.max(p, innerWidth - pw - p));
+  top = Math.min(Math.max(p, top), Math.max(p, innerHeight - ph - p));
+  POP.style.left = left + 'px'; POP.style.top = top + 'px';
+}
+function openPop(ref, anchor) {
+  const [k, i] = ref.split('#'), e = (IX[k] || [])[+i];
+  if (!e) return;
+  const m = e.m, d = d0(k), dstr = k + '　週' + WD[d.getDay()];
+  let h = '<button class="x">✕</button>';
+  if (e.type === 'meeting') {
+    h += '<div class="hd">' + esc(m.meeting) + '</div><div class="dt">' + dstr + '　·　會議紀錄</div>'
+      + '<div class="srcl">當次重點</div><ul>'
+      + m.summary.map(s => '<li>' + esc(s) + '</li>').join('') + '</ul>';
+  } else {
+    h += '<div class="hd">' + esc(e.name) + '</div>'
+      + '<div class="dt' + (e.type === 'guess' ? ' g' : '') + '">' + dstr
+      + (e.a.time ? '　' + esc(e.a.time) : '') + '　·　'
+      + (e.type === 'solid' ? '已確認行程' : '待你確認時間') + '</div>';
+    const sub = [e.a.at_meeting, e.a.where, e.a.who && ('由 ' + e.a.who + ' 報告')].filter(Boolean);
+    if (sub.length) h += '<div style="color:var(--muted);font-size:13px">' + sub.map(esc).join('　·　') + '</div>';
+    if (e.a.raw) h += '<div class="raw">筆記原文：' + esc(e.a.raw) + '</div>';
+    h += '<div class="src"><div class="srcl">這件事出自</div><div class="srcm">'
+      + esc(m.date) + '　' + esc(m.meeting) + '</div><ul>'
+      + m.summary.map(s => '<li>' + esc(s) + '</li>').join('') + '</ul></div>';
+  }
+  const s = m.source || {};
+  if (s.raw_text) h += '<details><summary>原始筆記全文'
+    + (s.captured_at ? '（' + esc(s.captured_at) + ' 存入）' : '') + '</summary><pre>'
+    + esc(s.raw_text) + '</pre></details>';
+  h += '<div class="acts"><button class="a" data-jump="' + EV.indexOf(m) + '">跳到完整紀錄 ↓</button></div>';
+  POP.innerHTML = h; POP.classList.add('on'); ANCHOR = anchor; placePop();
+  const dt = POP.querySelector('details');
+  if (dt) dt.addEventListener('toggle', placePop);
+}
+function jumpTo(idx) {
+  closePop();
+  const m = EV[idx]; if (!m) return;
+  const y = +m.date.slice(0, 4); let need = false;
+  if (KW) { KW = ''; document.getElementById('q').value = ''; need = true; }
+  if (YEAR !== 'all' && YEAR !== y) { YEAR = y; buildYearChips(); need = true; }
+  if (need) renderAll();
+  const el = document.getElementById('mtg-' + idx); if (!el) return;
+  el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  el.classList.remove('hl'); void el.offsetWidth; el.classList.add('hl');
+}
+
+function bind() {
+  document.addEventListener('click', e => {
+    const t = e.target.closest('[data-ref]');
+    if (t) { e.stopPropagation(); openPop(t.dataset.ref, t); return; }
+    if (e.target.closest('.pop')) {
+      if (e.target.closest('.x')) return closePop();
+      const j = e.target.closest('[data-jump]');
+      if (j) jumpTo(+j.dataset.jump);
+      return;
+    }
+    closePop();
+  }, true);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closePop(); });
+  addEventListener('resize', closePop);
+  document.getElementById('prev').onclick = () => { closePop(); if (--curM < 0) { curM = 11; curY--; } renderCal(); };
+  document.getElementById('next').onclick = () => { closePop(); if (++curM > 11) { curM = 0; curY++; } renderCal(); };
+  document.getElementById('today').onclick = () => {
+    closePop(); curY = TODAY.getFullYear(); curM = TODAY.getMonth(); SEL = TKEY; renderCal(); renderDetail();
+  };
+  document.getElementById('grid').addEventListener('click', e => {
+    const c = e.target.closest('.cell'); if (!c) return;
+    SEL = c.dataset.k;
+    const d = d0(SEL);
+    if (d.getMonth() !== curM) { curY = d.getFullYear(); curM = d.getMonth(); }
+    renderCal(); renderDetail();
+  });
+  document.getElementById('yrs').addEventListener('click', e => {
+    const y = e.target.closest('.yr'); if (!y) return;
+    YEAR = y.dataset.y === 'all' ? 'all' : +y.dataset.y;
+    buildYearChips(); renderSum();
+  });
+  document.getElementById('q').addEventListener('input', e => {
+    KW = e.target.value.trim().toLowerCase(); renderAll();
+  });
+}
+</script>
+</body>
+</html>
