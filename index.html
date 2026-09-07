@@ -104,7 +104,7 @@ body{margin:0;background:var(--bg);color:var(--text);line-height:1.75;
 /* ── 主畫面 ── */
 /* 月曆吃滿寬版，其餘閱讀性內容維持易讀行寬（靠左與月曆左緣對齊） */
 .wrap{max-width:1420px;margin:0 auto;padding:40px 18px 84px}
-#q,.detail,.sechead,.sechint,#sum,footer{max-width:1060px}
+#q,.detail,.sechead,.filters,.sechint,#sum,footer{max-width:1060px}
 header{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:22px}
 h1.t{font-size:22px;font-weight:500;margin:0;letter-spacing:.06em}
 .stat{color:var(--faint);font-size:12px;letter-spacing:.04em}
@@ -212,9 +212,25 @@ h2.sec{font-size:10.5px;font-weight:500;letter-spacing:.24em;color:var(--faint);
   display:flex;align-items:baseline;gap:9px}
 .mo .c{font-size:10.5px;font-weight:400;color:var(--faint);background:transparent;
   border:1px solid var(--border);border-radius:var(--r-sm);padding:0 7px;letter-spacing:.04em}
+/* 摘要篩選列：月份 chip + 排序 + 全部展開 */
+.filters{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:11px}
+.mons{display:flex;gap:6px;flex-wrap:wrap}
+.filters .btn{font-size:12.5px;padding:3px 12px}
+.filters .sp{margin-left:auto;display:flex;gap:8px}
+
+/* 摘要卡片：預設收合，一行一場；20 場全展開會長到 15 個螢幕 */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);
-  padding:16px 19px;margin-bottom:11px;box-shadow:var(--shadow)}
-.mhead{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:5px}
+  margin-bottom:8px;box-shadow:var(--shadow);overflow:hidden}
+.card>summary{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;
+  padding:10px 16px;cursor:pointer;list-style:none;user-select:none;transition:background .12s}
+.card>summary::-webkit-details-marker{display:none}
+.card>summary::before{content:'▸';flex:none;align-self:center;font-size:10px;
+  color:var(--faint);transition:transform .15s}
+.card[open]>summary::before{transform:rotate(90deg)}
+.card>summary:hover{background:var(--surface-2)}
+.card[open]>summary{border-bottom:1px solid var(--line)}
+.cnt{margin-left:auto;font-size:11.5px;color:var(--faint);letter-spacing:.03em;white-space:nowrap}
+.cbody{padding:11px 16px 14px}
 .date{font-variant-numeric:tabular-nums;font-weight:500;font-size:12.5px;color:var(--accent-ink);
   letter-spacing:.04em;white-space:nowrap}
 .mname{font-size:15.5px;font-weight:500;letter-spacing:.02em}
@@ -295,6 +311,8 @@ footer{margin-top:38px;padding-top:15px;border-top:1px solid var(--border);
   .grid.wk .cell{min-height:0;padding:8px 11px 10px;border-right:none}
   .grid.wk>.cell:last-child{border-bottom:none}
   .grid.wk .ev{font-size:12.5px;padding:3px 7px}
+  /* 窄螢幕下摘要行會折成兩行，計數靠右會顯得孤立，改為第二行靠左對齊 */
+  .cnt{margin-left:0;width:100%}
 }
 </style>
 <script>
@@ -351,13 +369,20 @@ if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)
     <h2 class="sec">會議與討論摘要</h2>
     <div class="yrs" id="yrs"></div>
   </div>
+  <div class="filters">
+    <div class="mons" id="mons"></div>
+    <div class="sp">
+      <button class="btn" id="sortbtn" type="button">新→舊</button>
+      <button class="btn" id="expall" type="button">全部展開</button>
+    </div>
+  </div>
   <div class="sechint" id="sechint"></div>
   <div id="sum"></div>
   <footer id="foot"></footer>
 </div>
 <div class="pop" id="pop"></div>
 
-<script src="data/vault.js?v=d9a054fab55e"></script>
+<script src="data/vault.js?v=0d318dc7a3ae"></script>
 <script>
 /* ============================================================
    資料以 AES-256-GCM 加密，金鑰由 PBKDF2-SHA256 從密碼派生。
@@ -425,6 +450,7 @@ document.getElementById('relock').addEventListener('click', () => {
 
 /* ── 以下為解密成功後的主畫面邏輯 ── */
 let IDX, EV = [], IX = {}, curY, curM, SEL = null, KW = '', YEAR = 'all', ANCHOR = null;
+let MONTH = 'all', SORT = 'desc', ALLOPEN = false;   // 摘要區的月份篩選、排序、展開狀態
 let VIEW = 'month', WSTART = null;   // WSTART：週檢視當週的週日（Date）
 const POP = document.getElementById('pop');
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -551,22 +577,34 @@ function renderDetail() {
 
 const CAP = 200;
 function renderSum() {
-  const all = EV.filter(m => !KW || JSON.stringify(m).toLowerCase().includes(KW))
-    .filter(m => YEAR === 'all' || m.date.slice(0, 4) === String(YEAR))
-    .slice().sort((a, b) => b.date.localeCompare(a.date));
+  /* 年份與搜尋先篩，月份 chip 的場次數依這個範圍算，才不會出現點了是空的月份 */
+  const scope = EV.filter(m => !KW || JSON.stringify(m).toLowerCase().includes(KW))
+    .filter(m => YEAR === 'all' || m.date.slice(0, 4) === String(YEAR));
+  buildMonthChips(scope);
+
+  const all = scope.filter(m => MONTH === 'all' || m.date.slice(0, 7) === MONTH)
+    .slice().sort((a, b) => SORT === 'desc'
+      ? b.date.localeCompare(a.date) : a.date.localeCompare(b.date));
   const shown = all.slice(0, CAP), over = all.length - shown.length, groups = {};
   shown.forEach(m => { (groups[m.date.slice(0, 7)] = groups[m.date.slice(0, 7)] || []).push(m); });
   let h = '';
-  if (!all.length) h = '<div class="none">' + (KW ? '沒有符合的紀錄' : '這一年沒有會議紀錄') + '</div>';
-  Object.keys(groups).sort().reverse().forEach(k => {
+  if (!all.length) h = '<div class="none">' + (KW ? '沒有符合的紀錄' : '這個範圍沒有會議紀錄') + '</div>';
+  const ks = Object.keys(groups).sort();
+  if (SORT === 'desc') ks.reverse();
+  ks.forEach(k => {
     const [y, mo] = k.split('-');
     h += '<div class="mo">' + y + ' 年 ' + (+mo) + ' 月<span class="c">' + groups[k].length + ' 場</span></div>';
     groups[k].forEach(m => {
-      h += '<div class="card" id="mtg-' + EV.indexOf(m) + '"><div class="mhead">'
+      /* 預設收合；搜尋命中或按了「全部展開」時才展開 */
+      const open = (ALLOPEN || KW) ? ' open' : '', nt = (m.action_items || []).length;
+      h += '<details class="card" id="mtg-' + EV.indexOf(m) + '"' + open + '><summary>'
         + '<span class="date">' + esc(m.date) + '</span>'
         + '<span class="mname">' + esc(m.meeting) + '</span>'
         + '<span class="wdl">週' + WD[d0(m.date).getDay()]
-        + (m.host_unit ? '　主辦：' + esc(m.host_unit) : '') + '</span></div>'
+        + (m.host_unit ? '　主辦：' + esc(m.host_unit) : '') + '</span>'
+        + '<span class="cnt">' + m.summary.length + ' 項重點'
+        + (nt ? '　·　' + nt + ' 項待辦' : '') + '</span>'
+        + '</summary><div class="cbody">'
         + '<ul>' + m.summary.map(s => '<li>' + esc(s) + '</li>').join('') + '</ul>'
         + (m.action_items || []).map(a => {
           const c = a.confidence, lb = c === 'solid' ? '下次' : c === 'guess' ? '待確認' : '未定';
@@ -574,15 +612,31 @@ function renderSum() {
             .filter(Boolean).map(esc).join('　·　');
           return '<div class="todo ' + (c === 'guess' ? 'g' : c === 'undated' ? 'u' : '') + '"><b>'
             + lb + '：</b>' + body + '</div>';
-        }).join('') + '</div>';
+        }).join('') + '</div></details>';
     });
   });
   if (over > 0) h += '<div class="older">還有 ' + over + ' 場未顯示（單次最多 ' + CAP
-    + ' 場）—— 用年份或搜尋縮小範圍</div>';
+    + ' 場）—— 用年份、月份或搜尋縮小範圍</div>';
   document.getElementById('sum').innerHTML = h;
+  document.getElementById('expall').textContent = ALLOPEN ? '全部收合' : '全部展開';
+  document.getElementById('sortbtn').textContent = SORT === 'desc' ? '新→舊' : '舊→新';
+  const scopeLabel = (YEAR === 'all' ? '全部年份' : YEAR + ' 年')
+    + (MONTH === 'all' ? '' : '　·　' + (+MONTH.slice(5)) + ' 月');
   document.getElementById('sechint').textContent =
-    (YEAR === 'all' ? '全部年份' : YEAR + ' 年') + '，依月份分組　·　顯示 ' + shown.length + ' 場'
-    + (KW ? '（符合搜尋 ' + all.length + ' 場）' : '');
+    scopeLabel + '　·　顯示 ' + shown.length + ' 場'
+    + (KW ? '（符合搜尋 ' + scope.length + ' 場，已自動展開）' : '　·　點標題列展開內容');
+}
+
+/* 月份 chip：只列出目前範圍內真的有紀錄的月份 */
+function buildMonthChips(scope) {
+  const cnt = {};
+  scope.forEach(m => { const k = m.date.slice(0, 7); cnt[k] = (cnt[k] || 0) + 1; });
+  const ks = Object.keys(cnt).sort().reverse();
+  if (MONTH !== 'all' && !cnt[MONTH]) MONTH = 'all';   // 篩選後該月份消失就退回全部
+  document.getElementById('mons').innerHTML =
+    '<span class="yr' + (MONTH === 'all' ? ' on' : '') + '" data-m="all">全部月份</span>'
+    + ks.map(k => '<span class="yr' + (MONTH === k ? ' on' : '') + '" data-m="' + k + '">'
+      + (YEAR === 'all' ? k.slice(0, 4) + '/' : '') + (+k.slice(5)) + ' 月</span>').join('');
 }
 
 function renderAll() {
@@ -645,6 +699,7 @@ function jumpTo(idx) {
   if (YEAR !== 'all' && YEAR !== y) { YEAR = y; buildYearChips(); need = true; }
   if (need) renderAll();
   const el = document.getElementById('mtg-' + idx); if (!el) return;
+  el.open = true;   // 卡片預設收合，跳過去要自動展開
   el.scrollIntoView({ behavior: 'smooth', block: 'center' });
   el.classList.remove('hl'); void el.offsetWidth; el.classList.add('hl');
 }
@@ -705,8 +760,15 @@ function bind() {
   document.getElementById('yrs').addEventListener('click', e => {
     const y = e.target.closest('.yr'); if (!y) return;
     YEAR = y.dataset.y === 'all' ? 'all' : +y.dataset.y;
+    MONTH = 'all';   // 換年份時月份篩選會失效，一併重設
     buildYearChips(); renderSum();
   });
+  document.getElementById('mons').addEventListener('click', e => {
+    const m = e.target.closest('.yr'); if (!m) return;
+    MONTH = m.dataset.m; renderSum();
+  });
+  document.getElementById('sortbtn').onclick = () => { SORT = SORT === 'desc' ? 'asc' : 'desc'; renderSum(); };
+  document.getElementById('expall').onclick = () => { ALLOPEN = !ALLOPEN; renderSum(); };
   document.getElementById('q').addEventListener('input', e => {
     KW = e.target.value.trim().toLowerCase(); renderAll();
   });
