@@ -6,71 +6,89 @@
 <meta name="robots" content="noindex,nofollow,noarchive">
 <title>個人工作手札</title>
 <style>
+/* ============================================================
+   配色：清水模 × 北歐極簡
+   暖中性灰為底（水泥、亞麻、原木），語意色一律降飽和，
+   靠「淡底 + 深字 + 左側色條」分辨，而非大面積填色。
+   圓角壓到 2~3px、陰影近乎無，分層改由 1px 細線承擔。
+   ============================================================ */
 :root{
   color-scheme:light;
-  /* -- 底層：中性灰階（略偏冷，讓語意色更跳） -- */
-  --bg:#f4f5f7;      --surface:#ffffff;   --surface-2:#f7f8fa;
-  --border:#dce0e6;  --line:#ebedf1;
-  --text:#14181e;    --muted:#5a6472;     --faint:#66707d;
-  /* -- 主色 · 已確認行程（對應行事曆橘色 colorId 6） -- */
-  --accent:#c2410c;  --accent-hi:#9a3412; --accent-fg:#ffffff;
-  --accent-soft:#fdf0e8;                  --accent-line:#efc3a6;
-  /* -- 警示色 · 待確認時間（對應行事曆黃色 colorId 5） -- */
-  --warn:#8f5d06;    --warn-soft:#fdf5e4; --warn-line:#e0c88d;
-  /* -- 次要色 · 會議紀錄 -- */
-  --meet:#35618e;    --meet-soft:#edf3f9; --meet-line:#c2d6e9;
-  --today:#fff4ec;   --danger:#b42318;
-  --ring:0 0 0 3px rgba(194,65,12,.22);
-  --shadow:0 1px 2px rgba(16,24,40,.05),0 3px 10px rgba(16,24,40,.05);
-  --shadow-pop:0 10px 30px rgba(16,24,40,.16),0 2px 8px rgba(16,24,40,.07);
+  /* -- 底層：暖灰階（水泥與紙） -- */
+  --bg:#edebe7;      --surface:#f8f7f4;   --surface-2:#e4e1db;
+  --border:#d3cfc6;  --line:#e0ddd5;
+  --text:#232120;    --muted:#57544e;     --faint:#6b665e;
+  /* -- 主色 · 已確認行程（陶土，對應行事曆橘色 colorId 6） -- */
+  --accent:#9a5b3d;  --accent-hi:#7d4830; --accent-fg:#ffffff;
+  --accent-soft:#f0e8e2;                  --accent-line:#d3bcae;
+  --accent-ink:#7a4630;
+  /* -- 警示色 · 待確認時間（赭石，對應行事曆黃色 colorId 5） -- */
+  --warn:#856527;    --warn-soft:#efeadc; --warn-line:#cfc19d;
+  --warn-ink:#66501c;
+  /* -- 次要色 · 會議紀錄（灰藍） -- */
+  --meet:#4b6a76;    --meet-soft:#e6ecee; --meet-line:#c0cfd3;
+  --meet-ink:#3a545f;
+  --today:#eee9e1;   --danger:#96453f;
+  --r-lg:3px;        --r-sm:2px;
+  --ring:0 0 0 3px rgba(154,91,61,.20);
+  --shadow:0 1px 2px rgba(35,33,32,.04);
+  --shadow-pop:0 8px 28px rgba(35,33,32,.14),0 1px 4px rgba(35,33,32,.06);
 }
 @media(prefers-color-scheme:dark){:root:not([data-theme=light]){
   color-scheme:dark;
-  --bg:#14171c;      --surface:#1c2027;   --surface-2:#222831;
-  --border:#313945;  --line:#272d36;
-  --text:#e7eaef;    --muted:#a3adbb;     --faint:#7e8897;
-  --accent:#ff8f57;  --accent-hi:#ffab7d; --accent-fg:#261205;
-  --accent-soft:#2d1c12;                  --accent-line:#5e3720;
-  --warn:#e3ba55;    --warn-soft:#2b2314; --warn-line:#59491c;
-  --meet:#82b3e0;    --meet-soft:#182430; --meet-line:#33506d;
-  --today:#2b1d13;   --danger:#f0796c;
-  --ring:0 0 0 3px rgba(255,143,87,.30);
-  --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.28);
-  --shadow-pop:0 14px 40px rgba(0,0,0,.6),0 2px 10px rgba(0,0,0,.4);
+  --bg:#1a1917;      --surface:#221f1d;   --surface-2:#2a2724;
+  --border:#37332e;  --line:#2f2c28;
+  --text:#e9e5de;    --muted:#a8a39a;     --faint:#8f8a81;
+  --accent:#d1906c;  --accent-hi:#e0a684; --accent-fg:#231610;
+  --accent-soft:#2e231c;                  --accent-line:#57402f;
+  --accent-ink:#dda183;
+  --warn:#c9a75f;    --warn-soft:#2a2519; --warn-line:#514726;
+  --warn-ink:#d1b271;
+  --meet:#8fb0bb;    --meet-soft:#1e2629; --meet-line:#3b4d54;
+  --meet-ink:#9dbcc6;
+  --today:#2b241e;   --danger:#d97a70;
+  --r-lg:3px;        --r-sm:2px;
+  --ring:0 0 0 3px rgba(209,144,108,.28);
+  --shadow:0 1px 2px rgba(0,0,0,.28);
+  --shadow-pop:0 12px 34px rgba(0,0,0,.55),0 1px 6px rgba(0,0,0,.35);
 }}
 :root[data-theme=dark]{
   color-scheme:dark;
-  --bg:#14171c;      --surface:#1c2027;   --surface-2:#222831;
-  --border:#313945;  --line:#272d36;
-  --text:#e7eaef;    --muted:#a3adbb;     --faint:#7e8897;
-  --accent:#ff8f57;  --accent-hi:#ffab7d; --accent-fg:#261205;
-  --accent-soft:#2d1c12;                  --accent-line:#5e3720;
-  --warn:#e3ba55;    --warn-soft:#2b2314; --warn-line:#59491c;
-  --meet:#82b3e0;    --meet-soft:#182430; --meet-line:#33506d;
-  --today:#2b1d13;   --danger:#f0796c;
-  --ring:0 0 0 3px rgba(255,143,87,.30);
-  --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.28);
-  --shadow-pop:0 14px 40px rgba(0,0,0,.6),0 2px 10px rgba(0,0,0,.4);
+  --bg:#1a1917;      --surface:#221f1d;   --surface-2:#2a2724;
+  --border:#37332e;  --line:#2f2c28;
+  --text:#e9e5de;    --muted:#a8a39a;     --faint:#8f8a81;
+  --accent:#d1906c;  --accent-hi:#e0a684; --accent-fg:#231610;
+  --accent-soft:#2e231c;                  --accent-line:#57402f;
+  --accent-ink:#dda183;
+  --warn:#c9a75f;    --warn-soft:#2a2519; --warn-line:#514726;
+  --warn-ink:#d1b271;
+  --meet:#8fb0bb;    --meet-soft:#1e2629; --meet-line:#3b4d54;
+  --meet-ink:#9dbcc6;
+  --today:#2b241e;   --danger:#d97a70;
+  --r-lg:3px;        --r-sm:2px;
+  --ring:0 0 0 3px rgba(209,144,108,.28);
+  --shadow:0 1px 2px rgba(0,0,0,.28);
+  --shadow-pop:0 12px 34px rgba(0,0,0,.55),0 1px 6px rgba(0,0,0,.35);
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);line-height:1.7;
+body{margin:0;background:var(--bg);color:var(--text);line-height:1.75;
   font-family:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
-  -webkit-font-smoothing:antialiased}
+  letter-spacing:.012em;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 
 /* ── 密碼閘門 ── */
 .gate{min-height:100dvh;display:flex;align-items:center;justify-content:center;padding:24px}
 .gatebox{width:100%;max-width:380px;background:var(--surface);border:1px solid var(--border);
-  border-radius:14px;padding:30px 26px;box-shadow:var(--shadow);text-align:center}
-.gatebox h1{font-size:21px;margin:0 0 6px;letter-spacing:-.01em}
+  border-radius:var(--r-lg);padding:30px 26px;box-shadow:var(--shadow);text-align:center}
+.gatebox h1{font-size:20px;font-weight:500;margin:0 0 8px;letter-spacing:.08em}
 .gatebox p{font-size:13.5px;color:var(--faint);margin:0 0 20px}
 .gatebox input{width:100%;padding:13px 15px;font-size:16px;font-family:inherit;
-  background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:10px;
-  text-align:center;letter-spacing:.05em}
+  background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:var(--r-sm);
+  text-align:center;letter-spacing:.14em}
 .gatebox input:focus{outline:none;border-color:var(--accent);box-shadow:var(--ring)}
-.gatebox button{width:100%;margin-top:11px;padding:13px;font-size:15px;font-weight:600;
+.gatebox button{width:100%;margin-top:12px;padding:13px;font-size:15px;font-weight:500;
   font-family:inherit;background:var(--accent);color:var(--accent-fg);
-  border:1px solid var(--accent);border-radius:10px;transition:background .12s,border-color .12s;
-  cursor:pointer}
+  border:1px solid var(--accent);border-radius:var(--r-sm);transition:background .12s,border-color .12s;
+  cursor:pointer;letter-spacing:.08em}
 .gatebox button:disabled{opacity:.55;cursor:default}
 .gatebox .msg{margin-top:14px;font-size:13px;min-height:20px}
 .gatebox .msg.err{color:var(--danger)}
@@ -84,149 +102,178 @@ body{margin:0;background:var(--bg);color:var(--text);line-height:1.7;
 @keyframes sp{to{transform:rotate(360deg)}}
 
 /* ── 主畫面 ── */
-.wrap{max-width:1000px;margin:0 auto;padding:28px 18px 80px}
-header{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:16px}
-h1.t{font-size:23px;font-weight:700;margin:0;letter-spacing:-.01em}
-.stat{color:var(--faint);font-size:12.5px}
+/* 月曆吃滿寬版，其餘閱讀性內容維持易讀行寬（靠左與月曆左緣對齊） */
+.wrap{max-width:1420px;margin:0 auto;padding:40px 18px 84px}
+#q,.detail,.sechead,.sechint,#sum,footer{max-width:1060px}
+header{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:22px}
+h1.t{font-size:22px;font-weight:500;margin:0;letter-spacing:.06em}
+.stat{color:var(--faint);font-size:12px;letter-spacing:.04em}
 .lock{align-self:center;font-size:12px;color:var(--muted);border:1px solid var(--border);
-  background:var(--surface);border-radius:8px;padding:4px 11px;cursor:pointer;font-family:inherit;
-  line-height:1.5;transition:background .12s,border-color .12s,color .12s}
-.lock:hover{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent)}
-#q{width:100%;padding:11px 14px;font-size:16px;font-family:inherit;margin-bottom:20px;
-  background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:9px}
+  background:transparent;border-radius:var(--r-sm);padding:4px 12px;cursor:pointer;font-family:inherit;
+  line-height:1.5;letter-spacing:.04em;transition:background .12s,border-color .12s,color .12s}
+.lock:hover{background:var(--surface-2);border-color:var(--accent-line);color:var(--accent-ink)}
+#q{width:100%;padding:12px 15px;font-size:16px;font-family:inherit;margin-bottom:24px;
+  background:var(--surface);color:var(--text);border:1px solid var(--border);border-radius:var(--r-lg)}
 #q:focus{outline:none;border-color:var(--accent);box-shadow:var(--ring)}
-.nav{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
-.nav h2{font-size:18px;font-weight:700;margin:0;min-width:126px;font-variant-numeric:tabular-nums}
-.btn{border:1px solid var(--border);background:var(--surface);color:var(--muted);
-  border-radius:8px;padding:5px 12px;font-size:14px;cursor:pointer;font-family:inherit;
-  line-height:1.5;transition:background .12s,border-color .12s,color .12s}
-.btn:hover{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent)}
+.nav{display:flex;align-items:center;gap:9px;margin-bottom:15px;flex-wrap:wrap}
+.nav h2{font-size:17px;font-weight:500;margin:0;min-width:126px;letter-spacing:.03em;
+  font-variant-numeric:tabular-nums}
+.btn{border:1px solid var(--border);background:transparent;color:var(--muted);
+  border-radius:var(--r-sm);padding:5px 13px;font-size:13.5px;cursor:pointer;font-family:inherit;
+  line-height:1.5;letter-spacing:.04em;transition:background .12s,border-color .12s,color .12s}
+.btn:hover{background:var(--surface-2);border-color:var(--accent-line);color:var(--accent-ink)}
 .btn:active{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
-.legend{margin-left:auto;display:flex;gap:11px;flex-wrap:wrap;font-size:11.5px;color:var(--muted)}
-.legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px}
-.lg-s{background:var(--accent);border:1px solid var(--accent)}
-.lg-g{background:var(--warn-soft);border:1.5px dashed var(--warn)}
-.lg-m{background:var(--meet-soft);border:1px solid var(--meet)}
-.cal{background:var(--surface);border:1px solid var(--border);border-radius:12px;
+/* 月／週切換 */
+.seg{display:inline-flex;border:1px solid var(--border);background:transparent;
+  border-radius:var(--r-sm);overflow:hidden}
+.segb{border:none;background:transparent;color:var(--muted);font-family:inherit;font-size:13.5px;
+  padding:5px 15px;cursor:pointer;line-height:1.5;letter-spacing:.06em;
+  transition:background .12s,color .12s}
+.segb+.segb{border-left:1px solid var(--border)}
+.segb:hover{background:var(--surface-2);color:var(--accent-ink)}
+.segb.on{background:var(--accent);color:var(--accent-fg);font-weight:500}
+.segb.on:hover{background:var(--accent-hi)}
+.legend{margin-left:auto;display:flex;gap:14px;flex-wrap:wrap;font-size:11px;color:var(--muted);
+  letter-spacing:.04em}
+.legend i{display:inline-block;width:16px;height:11px;margin-right:6px;vertical-align:-1px;
+  border:1px solid var(--border);border-left:3px solid transparent}
+.lg-s{background:var(--accent-soft);border-color:var(--accent-line);border-left-color:var(--accent)}
+.lg-g{background:var(--warn-soft);border-color:var(--warn-line);
+  border-left-color:var(--warn);border-left-style:dashed}
+.lg-m{background:var(--meet-soft);border-color:var(--meet-line);border-left-color:var(--meet)}
+.cal{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);
   overflow:hidden;box-shadow:var(--shadow);margin-bottom:8px}
 .cal .wd{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));border-bottom:1px solid var(--border)}
-.cal .wd div{padding:7px 0;text-align:center;font-size:11.5px;font-weight:700;color:var(--faint)}
-.cal .wd div.we{color:var(--accent)}
+.cal .wd div{padding:9px 0;text-align:center;font-size:10.5px;font-weight:500;color:var(--faint);
+  letter-spacing:.22em}
+.cal .wd div.we{color:var(--accent-ink)}
 .grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
-.cell{min-height:90px;min-width:0;border-right:1px solid var(--line);border-bottom:1px solid var(--line);
+.cell{min-height:106px;min-width:0;border-right:1px solid var(--line);border-bottom:1px solid var(--line);
   padding:4px 5px 5px;cursor:pointer}
 .cell:nth-child(7n){border-right:none}
 .grid>.cell:nth-last-child(-n+7){border-bottom:none}
 .cell:hover{background:var(--accent-soft)}
-.cell.out{background:var(--bg);opacity:.45}
+.cell.out{background:var(--bg);opacity:.62}
 .cell.today{background:var(--today)}
 .cell.sel{box-shadow:inset 0 0 0 2px var(--accent)}
 .dnum{font-size:12px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums;
   display:inline-block;min-width:19px;text-align:center;line-height:19px;border-radius:50%}
 .cell.today .dnum{background:var(--accent);color:var(--accent-fg);font-weight:700}
 .cell.out .dnum{color:var(--faint);font-weight:400}
-.ev{font-size:11px;line-height:1.4;margin-top:2px;padding:1px 4px;border-radius:4px;
-  border:1px solid transparent;
+/* 事項標籤：整塊填色在寬版月曆上過於厚重，
+   改為淡底 + 深字，左側 3px 色條承擔辨識 */
+.ev{font-size:11px;line-height:1.45;margin-top:3px;padding:2px 5px;border-radius:0 var(--r-sm) var(--r-sm) 0;
+  border-left:3px solid transparent;
   overflow:hidden;overflow-wrap:anywhere;word-break:break-word;
   display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;line-clamp:2;cursor:pointer}
-.ev.solid{background:var(--accent);border-color:var(--accent);color:var(--accent-fg);font-weight:600}
-.ev.guess{background:var(--warn-soft);border-color:var(--warn);border-style:dashed;
-  color:var(--warn);font-weight:600}
-.ev.meeting{background:var(--meet-soft);border-color:var(--meet-line);color:var(--meet);font-weight:600}
-.more{font-size:10.5px;color:var(--faint);margin-top:2px;padding-left:4px}
-.detail{background:var(--surface);border:1px solid var(--border);border-radius:12px;
+.ev.solid{background:var(--accent-soft);border-left-color:var(--accent);color:var(--accent-ink);font-weight:500}
+.ev.guess{background:var(--warn-soft);border-left-color:var(--warn);border-left-style:dashed;
+  color:var(--warn-ink);font-weight:500}
+.ev.meeting{background:var(--meet-soft);border-left-color:var(--meet);color:var(--meet-ink);font-weight:500}
+.more{font-size:10.5px;color:var(--faint);margin-top:3px;padding-left:5px;letter-spacing:.03em}
+
+/* 週檢視：一列七格、格子加高，當週事項全部列出不截斷 */
+.dlab{display:none;font-size:11.5px;color:var(--faint);margin-left:6px;
+  font-variant-numeric:tabular-nums}
+.grid.wk .dlab{display:inline}
+.grid.wk .cell{min-height:330px;padding:7px 8px 9px}
+/* 週檢視是為了看細節，故不截斷文字 */
+.grid.wk .ev{font-size:12.5px;line-height:1.5;margin-top:4px;padding:3px 7px;
+  display:block;-webkit-line-clamp:none;line-clamp:none}
+.detail{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);
   padding:15px 17px;margin-bottom:28px;box-shadow:var(--shadow)}
-.detail h3{margin:0 0 9px;font-size:14.5px;font-weight:700}
+.detail h3{margin:0 0 11px;font-size:13.5px;font-weight:500;letter-spacing:.05em;color:var(--muted)}
 .detail .none{color:var(--faint);font-size:13px}
 .row{padding:9px 0;border-top:1px solid var(--line)}
 .row:first-of-type{border-top:none}
-.row .t{font-size:11.5px;font-weight:700;padding:1px 9px;border-radius:20px;margin-right:7px;
-  border:1px solid transparent;white-space:nowrap}
-.t.solid{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
-.t.guess{background:var(--warn-soft);border-color:var(--warn);border-style:dashed;color:var(--warn)}
-.t.meeting{background:var(--meet-soft);border-color:var(--meet-line);color:var(--meet)}
-.row .n{font-weight:600;font-size:14.5px;cursor:pointer}
+.row .t{font-size:10.5px;font-weight:500;padding:2px 9px;border-radius:var(--r-sm);margin-right:8px;
+  letter-spacing:.08em;border-left:3px solid transparent;white-space:nowrap}
+.t.solid{background:var(--accent-soft);border-left-color:var(--accent);color:var(--accent-ink)}
+.t.guess{background:var(--warn-soft);border-left-color:var(--warn);border-left-style:dashed;color:var(--warn-ink)}
+.t.meeting{background:var(--meet-soft);border-left-color:var(--meet);color:var(--meet-ink)}
+.row .n{font-weight:500;font-size:14.5px;cursor:pointer}
 .row .n:hover,.ev:hover{text-decoration:underline;text-underline-offset:2px}
 .row .sub{color:var(--muted);font-size:12.5px;margin-top:2px}
 .row .raw{color:var(--faint);font-size:11.5px;margin-top:4px;font-style:italic;
   padding-left:9px;border-left:2px solid var(--border)}
 .sechead{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:5px}
-h2.sec{font-size:11px;font-weight:700;letter-spacing:.11em;color:var(--faint);
+h2.sec{font-size:10.5px;font-weight:500;letter-spacing:.24em;color:var(--faint);
   text-transform:uppercase;margin:0}
 .yrs{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
-.yr{font-size:12.5px;padding:3px 11px;border-radius:20px;cursor:pointer;user-select:none;
-  border:1px solid var(--border);background:var(--surface);color:var(--muted);
+.yr{font-size:12.5px;padding:3px 12px;border-radius:var(--r-sm);cursor:pointer;user-select:none;
+  border:1px solid var(--border);background:transparent;color:var(--muted);letter-spacing:.04em;
   transition:background .12s,border-color .12s,color .12s}
-.yr:hover{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent)}
-.yr.on{background:var(--accent);border-color:var(--accent);color:var(--accent-fg);font-weight:600}
+.yr:hover{background:var(--surface-2);border-color:var(--accent-line);color:var(--accent-ink)}
+.yr.on{background:var(--accent);border-color:var(--accent);color:var(--accent-fg);font-weight:500}
 .yr.on:hover{background:var(--accent-hi);border-color:var(--accent-hi);color:var(--accent-fg)}
 .sechint{font-size:12px;color:var(--faint);margin-bottom:14px}
-.mo{font-size:14.5px;font-weight:700;margin:22px 0 9px;padding-bottom:5px;
-  border-bottom:2px solid var(--border);display:flex;align-items:baseline;gap:8px}
-.mo .c{font-size:11px;font-weight:600;color:var(--muted);background:var(--surface-2);
-  border:1px solid var(--border);border-radius:10px;padding:0 7px}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:11px;
-  padding:14px 16px;margin-bottom:9px;box-shadow:var(--shadow)}
+.mo{font-size:12.5px;font-weight:500;margin:28px 0 11px;padding-bottom:8px;letter-spacing:.1em;
+  color:var(--muted);border-bottom:1px solid var(--border);
+  display:flex;align-items:baseline;gap:9px}
+.mo .c{font-size:10.5px;font-weight:400;color:var(--faint);background:transparent;
+  border:1px solid var(--border);border-radius:var(--r-sm);padding:0 7px;letter-spacing:.04em}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);
+  padding:16px 19px;margin-bottom:11px;box-shadow:var(--shadow)}
 .mhead{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:5px}
-.date{font-variant-numeric:tabular-nums;font-weight:700;font-size:13px;color:var(--accent);
-  white-space:nowrap}
-.mname{font-size:16px;font-weight:600}
+.date{font-variant-numeric:tabular-nums;font-weight:500;font-size:12.5px;color:var(--accent-ink);
+  letter-spacing:.04em;white-space:nowrap}
+.mname{font-size:15.5px;font-weight:500;letter-spacing:.02em}
 .wdl{color:var(--faint);font-size:12px}
 ul{margin:5px 0 0;padding-left:18px}
 li{margin:2px 0;font-size:14px}
 .todo{margin-top:10px;padding-top:8px;border-top:1px dashed var(--border);font-size:13px}
-.todo b{color:var(--accent)}
-.todo.g b{color:var(--warn)}
+.todo b{color:var(--accent-ink);font-weight:500}
+.todo.g b{color:var(--warn-ink)}
 .todo.u b{color:var(--faint)}
 .none{text-align:center;color:var(--faint);padding:30px;border:1px dashed var(--border);
-  border-radius:11px}
+  border-radius:var(--r-lg)}
 .older{font-size:12px;color:var(--faint);text-align:center;padding:12px;margin-top:9px;
   border-top:1px dashed var(--border)}
 footer{margin-top:38px;padding-top:15px;border-top:1px solid var(--border);
   color:var(--faint);font-size:12px}
 .pop{position:fixed;z-index:50;width:370px;max-width:calc(100vw - 20px);display:none;
   max-height:calc(100dvh - 20px);overflow-y:auto;
-  background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:15px 17px;
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:15px 17px;
   box-shadow:var(--shadow-pop)}
 .pop.on{display:block}
 .pop .x{position:absolute;top:8px;right:10px;cursor:pointer;color:var(--faint);font-size:16px;
-  line-height:1;border:none;background:none;padding:4px 8px;border-radius:5px;font-family:inherit}
-.pop .hd{font-size:15.5px;font-weight:700;margin:0 24px 4px 0;line-height:1.45}
-.pop .dt{font-size:13px;font-weight:600;color:var(--accent);margin-bottom:8px}
-.pop .dt.g{color:var(--warn)}
+  line-height:1;border:none;background:none;padding:4px 8px;border-radius:var(--r-sm);font-family:inherit}
+.pop .hd{font-size:15.5px;font-weight:500;margin:0 24px 5px 0;line-height:1.5;letter-spacing:.02em}
+.pop .dt{font-size:12.5px;font-weight:500;color:var(--accent-ink);margin-bottom:9px;letter-spacing:.04em}
+.pop .dt.g{color:var(--warn-ink)}
 .pop .raw{font-size:12px;color:var(--faint);font-style:italic;
   padding-left:9px;border-left:2px solid var(--border);margin-top:7px}
 .pop .src{margin-top:12px;padding-top:11px;border-top:1px solid var(--line)}
-.pop .srcl{font-size:10.5px;font-weight:700;letter-spacing:.1em;color:var(--faint);
+.pop .srcl{font-size:10px;font-weight:500;letter-spacing:.22em;color:var(--faint);
   text-transform:uppercase}
-.pop .srcm{font-size:14.5px;font-weight:600;margin:3px 0 5px}
+.pop .srcm{font-size:14.5px;font-weight:500;margin:4px 0 6px;letter-spacing:.02em}
 .pop ul{margin:0;padding-left:17px;max-height:170px;overflow-y:auto}
 .pop li{font-size:12.5px;color:var(--muted);margin:2px 0;line-height:1.55}
 .pop .acts{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap}
-.pop .a{font-size:12.5px;border:1px solid var(--border);background:var(--surface);color:var(--muted);
-  border-radius:7px;padding:5px 11px;cursor:pointer;font-family:inherit;line-height:1.5;
+.pop .a{font-size:12.5px;border:1px solid var(--border);background:transparent;color:var(--muted);
+  border-radius:var(--r-sm);padding:5px 11px;cursor:pointer;font-family:inherit;line-height:1.5;
   transition:background .12s,border-color .12s,color .12s}
-.pop .a:hover{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent)}
+.pop .a:hover{background:var(--surface-2);border-color:var(--accent-line);color:var(--accent-ink)}
 .pop .x:hover{background:var(--surface-2);color:var(--text)}
 .pop details{margin-top:12px;padding-top:11px;border-top:1px solid var(--line)}
 .pop summary{font-size:12.5px;color:var(--muted);cursor:pointer;list-style:none;user-select:none}
 .pop summary::-webkit-details-marker{display:none}
 .pop summary::before{content:'▸';display:inline-block;font-size:10px;margin-right:5px}
 .pop details[open] summary::before{content:'▾'}
-.pop pre{margin:9px 0 0;padding:11px 12px;background:var(--surface-2);border-radius:8px;
+.pop pre{margin:9px 0 0;padding:11px 12px;background:var(--surface-2);border-radius:var(--r-sm);
   border:1px solid var(--line);font-family:inherit;font-size:11.5px;line-height:1.65;
   color:var(--muted);white-space:pre-wrap;word-break:break-word;max-height:220px;overflow-y:auto}
-@keyframes flash{0%,100%{box-shadow:var(--shadow)}25%,60%{box-shadow:0 0 0 3px var(--accent)}}
+@keyframes flash{0%,100%{box-shadow:var(--shadow)}25%,60%{box-shadow:0 0 0 2px var(--accent)}}
 .card.hl{animation:flash 1.8s ease}
 
 .notrans,.notrans *{transition:none!important}
 /* 配色切換鈕 */
 .tgl{margin-left:auto;align-self:center;flex:none;width:32px;height:32px;padding:0;
   display:inline-flex;align-items:center;justify-content:center;font-size:14px;line-height:1;
-  cursor:pointer;font-family:inherit;border-radius:8px;
-  border:1px solid var(--border);background:var(--surface);color:var(--muted);
+  cursor:pointer;font-family:inherit;border-radius:var(--r-sm);
+  border:1px solid var(--border);background:transparent;color:var(--muted);
   transition:background .12s,border-color .12s,color .12s}
-.tgl:hover{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent)}
+.tgl:hover{background:var(--surface-2);border-color:var(--accent-line);color:var(--accent-ink)}
 .tgl:active{background:var(--accent);border-color:var(--accent);color:var(--accent-fg)}
 .btn:focus-visible,.yr:focus-visible,.tgl:focus-visible,.lock:focus-visible,
 .pop .a:focus-visible,.pop .x:focus-visible,
@@ -242,6 +289,12 @@ footer{margin-top:38px;padding-top:15px;border-top:1px solid var(--border);
   .legend{margin-left:0;width:100%;margin-top:4px}
   .yrs{margin-left:0;width:100%;margin-top:4px}
   .nav h2{min-width:104px;font-size:16px}
+  /* 週檢視在窄螢幕改單欄直排，七欄的欄寬在手機上放不下內容 */
+  .cal.wkmode .wd{display:none}
+  .grid.wk{grid-template-columns:1fr}
+  .grid.wk .cell{min-height:0;padding:8px 11px 10px;border-right:none}
+  .grid.wk>.cell:last-child{border-bottom:none}
+  .grid.wk .ev{font-size:12.5px;padding:3px 7px}
 }
 </style>
 <script>
@@ -278,13 +331,17 @@ if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)
     <h2 id="mtitle"></h2>
     <button class="btn" id="next">→</button>
     <button class="btn" id="today">今天</button>
+    <div class="seg" id="viewseg">
+      <button class="segb on" type="button" data-v="month">月</button>
+      <button class="segb" type="button" data-v="week">週</button>
+    </div>
     <div class="legend">
       <span><i class="lg-s"></i>已確認</span>
       <span><i class="lg-g"></i>待確認</span>
       <span><i class="lg-m"></i>會議紀錄</span>
     </div>
   </div>
-  <div class="cal">
+  <div class="cal" id="cal">
     <div class="wd"><div class="we">日</div><div>一</div><div>二</div><div>三</div>
       <div>四</div><div>五</div><div class="we">六</div></div>
     <div class="grid" id="grid"></div>
@@ -300,7 +357,7 @@ if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)
 </div>
 <div class="pop" id="pop"></div>
 
-<script src="data/vault.js?v=9f5d0df5319a"></script>
+<script src="data/vault.js?v=d9a054fab55e"></script>
 <script>
 /* ============================================================
    資料以 AES-256-GCM 加密，金鑰由 PBKDF2-SHA256 從密碼派生。
@@ -368,6 +425,7 @@ document.getElementById('relock').addEventListener('click', () => {
 
 /* ── 以下為解密成功後的主畫面邏輯 ── */
 let IDX, EV = [], IX = {}, curY, curM, SEL = null, KW = '', YEAR = 'all', ANCHOR = null;
+let VIEW = 'month', WSTART = null;   // WSTART：週檢視當週的週日（Date）
 const POP = document.getElementById('pop');
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const WD = '日一二三四五六';
@@ -414,26 +472,53 @@ function buildIndex() {
   return ix;
 }
 
+const weekStart = d => { const s = new Date(d); s.setHours(0, 0, 0, 0); s.setDate(s.getDate() - s.getDay()); return s; };
+
+/* limit 為 null 時列出當天全部事項（週檢視）；月檢視則截到三項 */
+function cellHTML(d, limit, label) {
+  const k = key(d), evs = IX[k] || [], cls = ['cell'];
+  if (limit !== null && d.getMonth() !== curM) cls.push('out');
+  if (k === TKEY) cls.push('today');
+  if (k === SEL) cls.push('sel');
+  const list = limit === null ? evs : evs.slice(0, limit);
+  return '<div class="' + cls.join(' ') + '" data-k="' + k + '">'
+    + '<span class="dnum">' + d.getDate() + '</span>'
+    + (label ? '<span class="dlab">' + (d.getMonth() + 1) + '/' + d.getDate() + '　週' + WD[d.getDay()] + '</span>' : '')
+    + list.map((e, j) => '<div class="ev ' + e.type + '" data-ref="' + k + '#' + j + '">'
+      + (e.a && e.a.time ? esc(e.a.time) + ' ' : '') + esc(e.name) + '</div>').join('')
+    + (limit !== null && evs.length > limit ? '<div class="more">+' + (evs.length - limit) + ' 項</div>' : '')
+    + '</div>';
+}
+
 function renderCal() {
-  const first = new Date(curY, curM, 1);
-  const st = new Date(first); st.setDate(1 - first.getDay());
-  const weeks = Math.ceil((first.getDay() + new Date(curY, curM + 1, 0).getDate()) / 7);
+  const grid = document.getElementById('grid'), cal = document.getElementById('cal');
   let h = '';
-  for (let i = 0; i < weeks * 7; i++) {
-    const d = new Date(st); d.setDate(st.getDate() + i);
-    const k = key(d), evs = IX[k] || [], cls = ['cell'];
-    if (d.getMonth() !== curM) cls.push('out');
-    if (k === TKEY) cls.push('today');
-    if (k === SEL) cls.push('sel');
-    h += '<div class="' + cls.join(' ') + '" data-k="' + k + '">'
-      + '<span class="dnum">' + d.getDate() + '</span>'
-      + evs.slice(0, 3).map((e, j) => '<div class="ev ' + e.type + '" data-ref="' + k + '#' + j + '">'
-        + (e.a && e.a.time ? esc(e.a.time) + ' ' : '') + esc(e.name) + '</div>').join('')
-      + (evs.length > 3 ? '<div class="more">+' + (evs.length - 3) + ' 項</div>' : '')
-      + '</div>';
+  if (VIEW === 'week') {
+    if (!WSTART) WSTART = weekStart(SEL ? d0(SEL) : TODAY);
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(WSTART); d.setDate(WSTART.getDate() + i);
+      h += cellHTML(d, null, true);
+    }
+    grid.className = 'grid wk'; cal.className = 'cal wkmode';
+    const end = new Date(WSTART); end.setDate(WSTART.getDate() + 6);
+    document.getElementById('mtitle').textContent =
+      WSTART.getFullYear() + ' 年 ' + (WSTART.getMonth() + 1) + ' 月 ' + WSTART.getDate() + ' 日 – '
+      + (end.getFullYear() !== WSTART.getFullYear() ? end.getFullYear() + ' 年 ' : '')
+      + (end.getMonth() + 1) + ' 月 ' + end.getDate() + ' 日';
+  } else {
+    const first = new Date(curY, curM, 1);
+    const st = new Date(first); st.setDate(1 - first.getDay());
+    const weeks = Math.ceil((first.getDay() + new Date(curY, curM + 1, 0).getDate()) / 7);
+    for (let i = 0; i < weeks * 7; i++) {
+      const d = new Date(st); d.setDate(st.getDate() + i);
+      h += cellHTML(d, 3, false);
+    }
+    grid.className = 'grid'; cal.className = 'cal';
+    document.getElementById('mtitle').textContent = curY + ' 年 ' + (curM + 1) + ' 月';
   }
-  document.getElementById('grid').innerHTML = h;
-  document.getElementById('mtitle').textContent = curY + ' 年 ' + (curM + 1) + ' 月';
+  grid.innerHTML = h;
+  document.querySelectorAll('#viewseg .segb').forEach(b =>
+    b.classList.toggle('on', b.dataset.v === VIEW));
 }
 
 function renderDetail() {
@@ -578,11 +663,38 @@ function bind() {
   }, true);
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closePop(); });
   addEventListener('resize', closePop);
-  document.getElementById('prev').onclick = () => { closePop(); if (--curM < 0) { curM = 11; curY--; } renderCal(); };
-  document.getElementById('next').onclick = () => { closePop(); if (++curM > 11) { curM = 0; curY++; } renderCal(); };
+  /* 前後移動：月檢視走一個月，週檢視走七天 */
+  function step(n) {
+    closePop();
+    if (VIEW === 'week') {
+      WSTART = WSTART || weekStart(SEL ? d0(SEL) : TODAY);
+      WSTART.setDate(WSTART.getDate() + n * 7);
+      curY = WSTART.getFullYear(); curM = WSTART.getMonth();
+    } else {
+      curM += n;
+      if (curM < 0) { curM = 11; curY--; } else if (curM > 11) { curM = 0; curY++; }
+    }
+    renderCal();
+  }
+  document.getElementById('prev').onclick = () => step(-1);
+  document.getElementById('next').onclick = () => step(1);
   document.getElementById('today').onclick = () => {
-    closePop(); curY = TODAY.getFullYear(); curM = TODAY.getMonth(); SEL = TKEY; renderCal(); renderDetail();
+    closePop(); curY = TODAY.getFullYear(); curM = TODAY.getMonth(); WSTART = weekStart(TODAY);
+    SEL = TKEY; renderCal(); renderDetail();
   };
+  document.getElementById('viewseg').addEventListener('click', e => {
+    const b = e.target.closest('.segb'); if (!b || b.dataset.v === VIEW) return;
+    closePop();
+    VIEW = b.dataset.v;
+    if (VIEW === 'week') {
+      /* 以選定日為準；沒選過則看今天是否落在當前月份，否則取該月一號 */
+      const base = SEL ? d0(SEL)
+        : (TODAY.getFullYear() === curY && TODAY.getMonth() === curM ? TODAY : new Date(curY, curM, 1));
+      WSTART = weekStart(base);
+      curY = WSTART.getFullYear(); curM = WSTART.getMonth();
+    }
+    renderCal();
+  });
   document.getElementById('grid').addEventListener('click', e => {
     const c = e.target.closest('.cell'); if (!c) return;
     SEL = c.dataset.k;
